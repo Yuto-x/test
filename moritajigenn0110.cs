@@ -223,7 +223,7 @@ public class tajigenn : MonoBehaviour
 
                             float numberX = tmp1.y - tmp2.y;
                             Debug.Log("高さの差異　：　" + numberX);
-                            for (float i = 0; i < numberX; i++) // numberX-6を消すと視点側に1マス増える　
+                            for (float i = 0; i <= numberX; i++) // numberX-6を消すと視点側に1マス増える　
                             {                                           // <= の = を消すと視点の次のマスが1マス消える
 
                                 // tmp3に座標を設定
@@ -251,7 +251,7 @@ public class tajigenn : MonoBehaviour
                         {
                             float numberX = tmp2.y - tmp1.y;
                             Debug.Log(numberX);
-                            for (float i = 0; i < numberX; i++)
+                            for (float i = 0; i <= numberX; i++)
                             {
 
                                 // tmp3に座標を設定
@@ -290,7 +290,7 @@ public class tajigenn : MonoBehaviour
 
                             float numberY = tmp1.x - tmp2.x;
                             Debug.Log(numberY);
-                            for (float i = 0; i < numberY; i++)
+                            for (float i = 0; i <= numberY; i++)
                             {
 
                                 // tmp3に座標を設定
@@ -318,7 +318,7 @@ public class tajigenn : MonoBehaviour
                         {
                             float numberY = tmp2.x - tmp1.x;
                             Debug.Log(numberY);
-                            for (float i = 0; i < numberY; i++)
+                            for (float i = 0; i <= numberY; i++)
                             {
 
                                 // tmp3に座標を設定
