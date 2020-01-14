@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,11 +12,12 @@ public class BlockGenerate : MonoBehaviour
     Vector3 OddClick = new Vector3(0, 0, 0);
     Vector3 EvenClick = new Vector3(0, 0, 0);
     string ObjName = ""; // クリックしてHitしたオブジェクト名を入れる変数
-    int[,,] field = new int[50, 3, 30]; // 3次元配列
+    int[,,] field = new int[100, 4, 40]; // 3次元配列
     public GameObject GrassCube;
     public GameObject WallCube;
     int count = 0;
     Vector3 ObjCreate = new Vector3(0, 0, 0);
+
     void Start()
     {
         // 3次元配列に0,1を格納
@@ -75,25 +76,21 @@ public class BlockGenerate : MonoBehaviour
 
                 // 取得したオブジェクト名をもとにオブジェクトの座標を取得
                 ObjPlace = GameObject.Find(ObjName).transform.position;
-                Debug.Log("オブジェクト座標→"+ObjPlace);
-                Debug.Log("オブジェクト名→"+ObjName);
-                Debug.Log("フィールド→"+field[(int)ObjPlace.x, (int)ObjPlace.y, (int)ObjPlace.z]);
+                Debug.Log("オブジェクト座標→" + ObjPlace);
+                Debug.Log("オブジェクト名→" + ObjName);
+                Debug.Log("フィールド→" + field[(int)ObjPlace.x, (int)ObjPlace.y, (int)ObjPlace.z]);
 
                 // クリックが奇数の時
                 if (Judg == false)
                 {
                     OddClick = ObjPlace;
-                    Judg = true;
                 }
                 // クリックが偶数の時
                 else if (Judg == true)
                 {
-                    EvenClick = ObjPlace;
-                    Judg = false;
+                    EvenClick = OddClick;
                 }
-
-                ObjCreate = ObjPlace;
-                ObjCreate.y += 1;
+                
                 //取得したオブジェクト名の中に変数Wallで設定した値が入っているか
                 if (ObjName.Contains("Wall"))
                 {
@@ -133,29 +130,37 @@ public class BlockGenerate : MonoBehaviour
 
                         }
                     }
+                    // X座標とZ座標が重ならなかった場合
                     else
                     {
-                        field[(int)ObjPlace.x, (int)ObjPlace.y + 1, (int)ObjPlace.z] = 1;
-                        if (field[(int)ObjPlace.x, (int)ObjPlace.y + 1, (int)ObjPlace.z] == 1)
+                        // クリックしたオブジェクトのY座標が0
+                        if (ObjPlace.y == 0)
                         {
-                            GameObject wall = Instantiate(WallCube);
-                            wall.name = "WallCube" + count;
-                            wall.transform.position = new Vector3(ObjPlace.x, ObjPlace.y + 1, ObjPlace.z);
-                            count++;
-                        }
-                        if (Judg == true)
-                        {
-                            if (OddClick.x != EvenClick.x && OddClick.z != EvenClick.z)
+                            // クリックしたオブジェクトの上のフィールドに2を入れる
+                            field[(int)ObjPlace.x, (int)ObjPlace.y + 1, (int)ObjPlace.z] = 2;
+                            // クリックしたオブジェクトの上のフィールドの値が2の場合
+                            if (field[(int)ObjPlace.x, (int)ObjPlace.y + 1, (int)ObjPlace.z] == 2)
                             {
-                                OddClick = EvenClick;
-                                Judg = false;
-                                
+                                // オブジェクト生成
+                                GameObject wall = Instantiate(WallCube);
+                                wall.name = "WallCube" + count;
+                                wall.transform.position = new Vector3(ObjPlace.x, ObjPlace.y + 1, ObjPlace.z);
+                                Judg = true;
+                                count++;
+                            }
+                            if (Judg == true)
+                            {
+                                if (OddClick.x != EvenClick.x && OddClick.z != EvenClick.z)
+                                {
+                                    OddClick = EvenClick;
+                                    Judg = false;
+
+                                }
                             }
                         }
                     }
                 }
             }
-
         }
     }
 }
