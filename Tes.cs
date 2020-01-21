@@ -2,55 +2,78 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Tes : MonoBehaviour
 {
-    GameObject[] SecondRoomObjList; // 2階の部屋を入れる配列
-    GameObject[] SecondRoomTagList; // クリックした部屋のタグを入れる配列
-    bool Han = true;
     private RaycastHit hit;
-    string ObjectName;
+
     List<GameObject> myList = new List<GameObject>();
-    // Start is called before the first frame update
-    void Start()
-    {
+    GameObject[] SecondRoomObjList; // 2階の部屋を入れる配列
 
-    }
+    GameObject[] SecondRoomTagList; // クリックした部屋のタグを入れる配列
 
+    string CreateObjName; // 生成したオブジェクトの名前
+    GameObject CreateObjTag; // 生成したオブジェクトのタグ
+
+    string DelObjName = "";
+    GameObject DelObjTag;
+    GameObject[] DelObjList;
+
+    GameObject[] ArrayList;
+        
     // Update is called once per frame
     void Update()
     {
-        if (Han == true)
-        {
-            Han = false;
-            SecondRoomObjList = GameObject.FindGameObjectsWithTag("Hidden");
-            myList.Add(SecondRoomObjList[0]);
-            
-
-            Debug.Log("0番目" + myList[0]);
-            Debug.Log("0番目" + SecondRoomObjList[1]);
-            
-            
-
-        }
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
-                ObjectName = hit.collider.gameObject.name;
-                GameObject ObjTag = GameObject.Find(ObjectName);
-                SecondRoomTagList = GameObject.FindGameObjectsWithTag(ObjTag.tag);
-
-                foreach(GameObject hairetu in SecondRoomTagList)
+                CreateObjName = hit.collider.gameObject.name;
+                CreateObjTag = GameObject.Find(CreateObjName);
+                // 指定したタグのオブジェクトすべてを2階で生成した部屋(オブジェクト)の配列に　
+                SecondRoomObjList = GameObject.FindGameObjectsWithTag(CreateObjTag.tag);
+                // 配列に入っているオブジェクトの数だけループ
+                foreach (GameObject SecongRoomObj in SecondRoomObjList)
                 {
-                    
-
-                    //Debug.Log("配列"+hairetu);
-                    int su = Array.IndexOf(SecondRoomObjList, hairetu);
-                    Debug.Log("数"+su);
+                    myList.Add(SecongRoomObj); // リストに追加
+                    Debug.Log("追加したオブジェクト"+SecongRoomObj);
+                    Debug.Log("追加時の要素数"+myList.Count());
                 }
                 
+            }
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                DelObjName = hit.collider.gameObject.name;
+                DelObjTag = GameObject.Find(DelObjName);
+                DelObjList = GameObject.FindGameObjectsWithTag(DelObjTag.tag);
+                // リストを配列に変換
+                ArrayList = myList.ToArray();
+                for(int i = 0; i <= DelObjList.Length-1; i++)
+                {
+                    Debug.Log("配列の長さ＝"+ DelObjList.Length);
+                    int Su = Array.IndexOf(ArrayList, DelObjList[i]);
+                    Debug.Log("su=" + Su);
+                    ArrayList[Su] = null;
+                }
+                myList = new List<GameObject>(ArrayList);
+                /*
+                foreach (GameObject DelLoop in DelObjList)
+                {
+                    int Su = Array.IndexOf(ArrayList, DelLoop);
+                    Debug.Log("su="+Su);
+                    ArrayList[Su] = null;
+                }
+                */
+                foreach (GameObject tes in ArrayList.Where(e => e != null))
+                {
+                    Debug.Log("削除後=" + tes);
+                }
             }
         }
     }
