@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +21,20 @@ public class Tes : MonoBehaviour
     GameObject[] DelObjList;
 
     GameObject[] ArrayList;
+
+    string StratObjName; // 始点のオブジェクト名
+    GameObject StratObj;
+    Vector3 StratObjPos = new Vector3(0, 0, 0);
+    string OsitaObjName;
+    GameObject OsitaObj;
+    public GameObject kawari;
+    
+    bool MateHan = true;
+
+    void Start()
+    {
         
+    }
     // Update is called once per frame
     void Update()
     {
@@ -44,7 +57,31 @@ public class Tes : MonoBehaviour
                 
             }
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButton(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (MateHan == true)
+                {
+                    MateHan = false;
+                    StratObjName = hit.collider.gameObject.name;
+                    StratObj = GameObject.Find(StratObjName);
+                    StratObjPos = StratObj.transform.position;
+                    StratObj.SetActive(false);
+                    OsitaObj = kawari;
+                    OsitaObjName = OsitaObj.name;
+                    Instantiate(kawari).transform.position = StratObjPos;
+                }
+            }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            MateHan = true;
+            Destroy(OsitaObj);
+            StratObj.SetActive(true);
+        }
+            if (Input.GetMouseButtonDown(1))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
